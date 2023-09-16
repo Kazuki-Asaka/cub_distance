@@ -39,13 +39,30 @@ void	set_map(t_cor *cor)
 	close(fd);
 }
 
-int	check_int_map(t_cor *cor, double x, double y)
+int	check_int_map_dx(t_cor *cor, double x, double y, double angle)
 {
 	int	x_int;
 	int	y_int;
 	
 	x_int = (int)x;
 	y_int = (int)y;
+	if ((double)180 < angle && angle <= (double)360)
+		y--;
+	if (cor -> map[x_int][y_int] == '1')
+		return (1);
+	else
+		return (0);
+}
+
+int	check_int_map_dy(t_cor *cor, double x, double y, double angle)
+{
+	int	x_int;
+	int	y_int;
+	
+	x_int = (int)x;
+	y_int = (int)y;
+	if ((double)90 < angle && angle <= (double)270)
+		x--;
 	if (cor -> map[x_int][y_int] == '1')
 		return (1);
 	else
@@ -83,21 +100,31 @@ void	culc_distance(double angle, t_cor *cor)
 		{
 			if (a.init_x > (double)5 || a.init_x < (double)0 ||a.init_y > (double)5 || a.init_y < (double)0)
 				break ;
-			if (check_int_map(cor, a.init_x, a.init_y) == 1)
+			if (check_int_map_dx(cor, a.init_x, a.init_y, angle) == 1)
 				break;
 			a.init_y -= 1;
 		}
 	}
 	else
 	{
-		tmp = (int)cor -> y_now;
-		a.init_x = -(cor -> y_now -(double)tmp) / tan (angle * M_PI / (double)180);
+			tmp = (int)cor -> y_now;
+		// else
+		// 	tmp = (int)cor -> y_now + 1;
+		a.init_x = -(cor -> y_now -(double)tmp) / tan (angle * M_PI / (double)180) + cor -> x_now;
 		a.init_y = (double)tmp;
-		tmp = (int)cor -> x_now + 1;
+		printf("%d\n", tmp);
+		// if ((double)180 <=angle && angle <= (double)360)//x軸での交点
+
+		// if (((double)270 < angle && angle <= (double)360) ||((double)0 < angle && angle < (double)90))
+		// 	tmp = (int)cor -> x_now + 1;
+		// else
+			tmp = (int)cor -> x_now;
+		b.init_y = -(cor -> x_now - (double)tmp) * tan(angle * M_PI / (double)180) + cor -> y_now;
 		b.init_x = tmp;
-		b.init_y = -(cor -> x_now - (double)tmp) * tan(angle * M_PI / (double)180);
-		printf("angle %f (%f, %f), (%f, %f)\n", angle, a.init_x, a.init_x, b.init_x, b.init_y);
-		while(1)
+		if (((double)270 < angle && angle <= (double)360) ||((double)0 < angle && angle < (double)90))
+			b.init_x += 1;
+		printf("angle %f up(%f, %f), down(%f, %f)\n", angle, a.init_x, a.init_y, b.init_x, b.init_y);
+		while(1)//up 
 		{
 			if (a.init_x > (double)5 || a.init_x < (double)0 ||a.init_y > (double)5 || a.init_y < (double)0)
 			{
@@ -106,15 +133,19 @@ void	culc_distance(double angle, t_cor *cor)
 					a.distance = -a.distance;
 				break;
 			}
-			if (check_int_map(cor, a.init_x, a.init_y) == 1)
+			if (check_int_map_dy(cor, a.init_x, a.init_y, angle) == 1)
 			{
 				a.distance = a.init_x * cos((angle - (double)N) * M_PI / 180) + a.init_y * sin((angle - (double)N) * M_PI / 180);
 				if (a.distance < 0)
 					a.distance = -a.distance;
 				break;
 			}
-			a.init_x = a.init_x + 1;
-			a.init_y = a.init_y + dx;
+			// if (((double)270 < angle && angle <= (double)360) ||((double)0 < angle && angle < (double)90))
+			// 	a.init_x = a.init_x + 1;
+			// else
+			// 	a.init_x = a.init_x - 1;
+			a.init_x += dy;
+			a.init_y = a.init_y - 1;
 		}
 		while(1)
 		{
@@ -125,20 +156,24 @@ void	culc_distance(double angle, t_cor *cor)
 					b.distance = -b.distance;
 				break;
 			}
-			if (check_int_map(cor, b.init_x, b.init_y) == 1)
+			if (check_int_map_dx(cor, b.init_x, b.init_y, angle) == 1)
 			{
 				b.distance = b.init_x * cos((angle - (double)N) * M_PI / 180) + b.init_y * sin((angle - (double)N) * M_PI / 180);
 				if (b.distance < 0)
 					b.distance = -b.distance;
 				break;
 			}
-			b.init_x = b.init_x + dy;
-			b.init_y = b.init_y + 1;
+			if (((double)270 < angle && angle <= (double)360) ||((double)0 < angle && angle < (double)90))
+				b.init_x += 1;
+			else
+				b.init_x -= 1;
+			b.init_y += dx;
 		}
-		if (a.distance < b.distance)
-			printf("distance %f\n", a.distance);
-		else
-			printf("distance %f\n", b.distance);
+		printf("angle %f up(%f, %f), down(%f, %f)\n", angle, a.init_x, a.init_y, b.init_x, b.init_y);
+		// if (a.distance < b.distance)
+		// 	printf("distance %f\n", a.distance);
+		// else
+		// 	printf("distance %f\n", b.distance);
 	}
 }
 
