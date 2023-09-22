@@ -6,7 +6,7 @@
 /*   By: akazuki <akazuki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 10:37:42 by akazuki           #+#    #+#             */
-/*   Updated: 2023/09/15 17:35:30 by akazuki          ###   ########.fr       */
+/*   Updated: 2023/09/21 16:26:52 by akazuki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ typedef struct s_cor
 {
 	double	x_now;
 	double	y_now;
-	char	direction;
+	double	direction;
 	char	map[5][5];
 } t_cor;
 
-typedef struct s_start_cor
+typedef struct s_state_cor
 {
 	double	init_x;
 	double	init_y;
 	double	distance;
-} t_start_cor;
+} t_state_cor;
 
 #endif
