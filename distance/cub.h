@@ -43,4 +43,6 @@ typedef struct s_state_cor
 	double	distance;
 } t_state_cor;
 
+void	culc_distance(t_cor *cor);
+
 #endif

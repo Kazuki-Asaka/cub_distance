@@ -236,5 +236,5 @@ int	main(void)
 	set_map(cor);
 	print_map(cor);
 	get_my_pos(cor);
-	culc_distance_loop(cor);
+	culc_distance(cor);
 }
