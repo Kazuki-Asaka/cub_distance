@@ -216,8 +216,8 @@ void	get_my_pos(t_cor *cor)
 			if (cor -> map[i][j] != '0' && cor -> map[i][j] != '1')
 			{
 				cor -> direction = 270.0;
-				cor -> x_now = (double)i + 0.5;
-				cor -> y_now = (double)j + 0.5;
+				cor -> x_now = (double)j + 0.5;
+				cor -> y_now = (double)i + 0.5;
 			}
 			j++;
 		}

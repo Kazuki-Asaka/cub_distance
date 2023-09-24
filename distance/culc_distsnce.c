@@ -94,7 +94,7 @@ t_state_cor	set_init_cor_y_axis(t_cor *cor, double angle)
 	if (((double)0 < angle && angle < (double)90)
 	|| ((double)270 < angle && angle <(double)360))
 		dx++;
-	if (dx > cor -> x_now)
+	if ((double)dx > cor -> x_now)
 		tmp =(double)dx - cor -> x_now;
 	else
 		tmp =  cor -> x_now - (double)dx;
@@ -132,6 +132,8 @@ t_state_cor	culc_intersection_x_axis(t_cor *cor, double angle)
 	while (check_map_x_axis(cor, cor_init.init_x, cor_init.init_y, angle) != '1')
 	{
 		cor_init.init_x = cor_init.init_x + delta_y;
+		if (init_check(cor_init) == 1)
+			break ;
 		if (((double)0 < angle && angle < (double)90)
 		|| ((double)90 < angle && angle < (double)180))
 			cor_init.init_y ++;
@@ -160,6 +162,8 @@ t_state_cor	culc_intersection_y_axis(t_cor *cor, double angle)
 	while (check_map_y_axis(cor, cor_init.init_x, cor_init.init_y, angle) != '1')
 	{
 		cor_init.init_y = cor_init.init_y + delta_x;
+		if (init_check(cor_init) == 1)
+			break ;
 		if (((double)0 < angle && angle < (double)90)
 		|| ((double)270 < angle && angle < (double)360))
 			cor_init.init_x ++;
