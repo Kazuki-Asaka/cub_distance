@@ -40,6 +40,7 @@ typedef struct s_state_cor
 {
 	double	init_x;
 	double	init_y;
+	double	angle;
 	double	distance;
 } t_state_cor;
 
