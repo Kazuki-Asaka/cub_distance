@@ -138,7 +138,7 @@ t_state_cor	culc_intersection_x_axis(t_cor *cor, double angle)
 		else
 			cor_init.init_y--;
 	}
-	tmp_distance = cor_init.init_x * cor_init.init_x + cor_init.init_y * cor_init.init_y;
+	tmp_distance = sqrt((cor_init.init_x - cor -> x_now) * (cor_init.init_x - cor -> x_now) + (cor_init.init_y - cor -> y_now) * (cor_init.init_y - cor -> y_now));
 	cor_init.distance = tmp_distance * cos((cor -> direction - angle) * 3.14 / (double)180); 
 	return (cor_init);
 }
@@ -166,7 +166,7 @@ t_state_cor	culc_intersection_y_axis(t_cor *cor, double angle)
 		else
 			cor_init.init_x--;
 	}
-	tmp_distance = cor_init.init_x * cor_init.init_x + cor_init.init_y * cor_init.init_y;
+	tmp_distance = sqrt((cor_init.init_x - cor -> x_now) * (cor_init.init_x - cor -> x_now) + (cor_init.init_y - cor -> y_now) * (cor_init.init_y - cor -> y_now));
 	cor_init.distance = tmp_distance * cos((cor -> direction - angle) * 3.14 / (double)180);
 	return (cor_init);
 }
@@ -201,13 +201,13 @@ t_state_cor	multiple_vertical_intersection(t_cor *cor, double angle)
 	t_state_cor	cor_init;
 	int			y_int;
 
-	y_int = cor -> x_now;
+	y_int = cor -> y_now;
 	cor_init.init_x = cor -> x_now;
 	if (angle == (double) 90)
 		y_int ++;
 	cor_init.init_y = (double)y_int;
 	printf("angle %f y_axis_init (%f, %f)\n", angle, cor_init.init_x, cor_init.init_y);
-	while (check_map_y_axis(cor, cor_init.init_x, cor_init.init_y, angle) != '1')
+	while (check_map_x_axis(cor, cor_init.init_x, cor_init.init_y, angle) != '1')
 	{
 		if (angle == 90)
 			cor_init.init_y = cor_init.init_y + (double)1;
@@ -215,7 +215,7 @@ t_state_cor	multiple_vertical_intersection(t_cor *cor, double angle)
 			cor_init.init_y = cor_init.init_y - (double)1;
 	}
 	if (angle == (double)270)
-		cor_init.distance = cor_init.init_y - cor -> y_now;
+		cor_init.distance = cor -> y_now - cor_init.init_y;
 	else
 		cor_init.distance = cor_init.init_y;
 	return (cor_init);
@@ -239,7 +239,6 @@ void	step_position(t_cor *cor, double angle)
 	t_state_cor	intersection_y_axis;
 	t_state_cor	result_cor;
 
-	result_cor.angle = angle;
 	if (angle == (double)0 || angle == (double)180)
 	{
 		intersection_y_axis = multiple_parallel_intersection(cor, angle);
@@ -256,9 +255,10 @@ void	step_position(t_cor *cor, double angle)
 	{
 		intersection_x_axis = culc_intersection_x_axis(cor, angle);
 		intersection_y_axis = culc_intersection_y_axis(cor, angle);
-		result_cor = (intersection_x_axis, intersection_y_axis);
+		result_cor = choice_distance(intersection_x_axis, intersection_y_axis);
 		// printf("angle %f x_axis (%f, %f) y_axis(%f, %f)\n", angle, intersection_x_axis.init_x, intersection_x_axis.init_y, intersection_y_axis.init_x, intersection_y_axis.init_y);
 	}
+	result_cor.angle = angle;
 	printf("angle %f cor (%f, %f) distance %f\n", result_cor.angle, result_cor.init_x, result_cor.init_y, result_cor.distance);
 }
 
